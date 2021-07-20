@@ -44,4 +44,4 @@ for SearchTerm in search_terms:
             except:
                 print(f'couldnt save image to amazon for {SearchTerm}, {page}, {gif}, {title} {fname} (search term, page, gif_in_list, title, fname)')
                 print(f'counter: {counter}')      
-            counter+=1
+            counter+=1 # my comment
