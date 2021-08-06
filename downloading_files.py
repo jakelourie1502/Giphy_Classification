@@ -1,10 +1,13 @@
 import boto3
+aws_access_key_id = input('type in aws access key')
+aws_secret_access_key = input('type in secret key')
 
 BUCKET_NAME = 'giphy-classification-bucket'
 idx = 1
+aws_acces
 r3 = boto3.resource('s3',
-    aws_access_key_id = 'AKIAQEASK5DNYV56GQUK',
-    aws_secret_access_key = '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',
+    aws_access_key_id = aws_access_key_id,
+    aws_secret_access_key = aws_secret_access_key,
     region_name = 'eu-west-2')
 
 my_bucket = r3.Bucket(BUCKET_NAME)
