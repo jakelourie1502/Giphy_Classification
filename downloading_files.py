@@ -1,6 +1,10 @@
 import boto3
-aws_access_key_id = input('type in aws access key')
-aws_secret_access_key = input('type in secret key')
+import argparse
+parser = argparse.ArgumentParser(description='get some keys.')
+parser.add_argument('aws key', metavar='key', type=str)
+parser.add_argument('aws secret key', metavar='secret_key', type=str)
+
+aws_access_key_id, aws_secret_access_key = vars(parser.parse_args()).values()
 
 BUCKET_NAME = 'giphy-classification-bucket'
 idx = 1
