@@ -12,7 +12,6 @@ from vid_dataset_file import VidDataset, Collate_FN
 from slow_model import ResidualBlock, SlowNet
 import torch.utils.data.dataloader as Dataloader
 torch.cuda.empty_cache()
-
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(device)
 
@@ -22,39 +21,27 @@ train_dataset, val_dataset = VidDataset(train_folder), VidDataset(val_folder)
 train_dataloader = DataLoader(batch_size = 1,dataset= train_dataset,shuffle=True, num_workers=1)
 val_dataloader = DataLoader(batch_size = 1,dataset= val_dataset,shuffle=True,num_workers=1)
 
-# filesample = os.listdir(f'{train_folder}Falling/')[0]
-# reader = torchvision.io.read_video(f'{train_folder}Falling/{filesample}')[0]
-# print(reader.shape)
-
-# a, _,_ = next(iter(train_dataloader))
-# print(a.shape)
-# b, _,_ = next(iter(val_dataloader))
-# print(b.shape)
-# quit()
 
 model = SlowNet(number_of_classes = 3).to(device)
+# model = torch.load('/home/ubuntu/giphy_project_files/model_checkpoints/Modelsave0EPOCHEND.pt')
 acc = torchmetrics.Accuracy().to(device)
 criterion = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(),lr=0.01)
 
-'''Not in use'''
-# lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[1,5,10,15], gamma=0.3)    #not used right now.  
-###HOW TO CALL THIS FUNCTION
-#if self.lr_scheduler is not None: self.lr_scheduler.step()
 
 #pre-saving model
 epoch = 'pre_save'
-model_save_path = f'/home/ubuntu/giphy_project_files/model_checkpoints/Modelsave{epoch}.pt'
+model_save_path = f'/home/ubuntu/new_github_folder/Giphy_Classification/model_checkpoint/Modelsave{epoch}.pt'
 torch.save(model, model_save_path)
 
 import time
 start_time = time.time()
 
-epochs = 5
-for epoch in range(1):
+epochs = 8
+for epoch in range(epochs):
   model.train()
   idx = 0
-  for batch, _, targets in train_dataloader:
+  for batch, labels, targets in train_dataloader:
     idx+=1
     try:
       batch = batch.permute(0,4,1,2,3) #batch, channels, frames, h, w
@@ -66,11 +53,10 @@ for epoch in range(1):
       #Once every 256, compute and print accuracy for train and optimize step.
       if (idx+1) % 256 == 0:
           optimizer.step(); optimizer.zero_grad()
-          print(f'optimized after {int(time.time()-start_time)}')
           accuracy_256_examples = acc.compute()
           print(f'Time: {int(time.time()-start_time)}\nAccuracy for 256_batch number {(idx+1)//100}: {accuracy_256_examples}')
           acc.reset()
-          model_save_path = f'/home/ubuntu/giphy_project_files/model_checkpoints/Modelsave{epoch}-{idx}.pt'
+          model_save_path = f'/home/ubuntu/new_github_folder/Giphy_Classification/model_checkpoint/Modelsave{epoch}-{idx}.pt'
           torch.save(model, model_save_path)
     except:
       print(f'failed at idx {idx}')
@@ -89,7 +75,7 @@ for epoch in range(1):
   
     ###Model saving
 
-  model_save_path = f'/home/ubuntu/giphy_project_files/model_checkpoints/Modelsave{epoch}EPOCHEND.pt'
+  model_save_path = f'/home/ubuntu/new_github_folder/Giphy_Classification/model_checkpoint/Modelsave{epoch}EPOCHEND.pt'
   torch.save(model, model_save_path)
    
     

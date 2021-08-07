@@ -92,12 +92,6 @@ class ResidualBlock(torch.nn.Module):
         out = self.bn3(out) #scales up to 512
         
         identity = self.conv4(identity) #this scales up channels to 512 and shrinks spatial size by 2.
-
-        # if self.identity_downsample is not None:
-        #     identity = self.identity_downsample(identity)
-        # else:
-        #     identity = 
-        
         
         out += identity 
         out = self.relu(out)
@@ -132,7 +126,7 @@ class SlowNet(torch.nn.Module):
   
         self.max_pool_slow = torch.nn.MaxPool3d(kernel_size=(1,3,3), stride=(1,2,2))
         
-        self.res2_slow = self._make_residual_layer(3, 1, 64,(1,2,2)) # number_of_blocks, block_ver, intermediate_channels, stride
+        self.res2_slow = self._make_residual_layer(3, 1, 64) # number_of_blocks, block_ver, intermediate_channels, stride
 
         self.res3_slow = self._make_residual_layer(4, 1, 128, (1,2,2))
         # COMMENT: stride should not be 1 here, but can't decide what it should be, checked their implementation but its not very clear, maybe 1x2x2, as per previous one
