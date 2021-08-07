@@ -23,7 +23,7 @@ val_dataloader = DataLoader(batch_size = 1,dataset= val_dataset,shuffle=True,num
 
 
 model = SlowNet(number_of_classes = 3).to(device)
-# model = torch.load('/home/ubuntu/giphy_project_files/model_checkpoints/Modelsave0EPOCHEND.pt')
+model = torch.load('/home/ubuntu/new_github_folder/Giphy_Classification/model_checkpoint/Modelsave3-9983.pt')
 acc = torchmetrics.Accuracy().to(device)
 criterion = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(),lr=0.01)
@@ -36,9 +36,9 @@ torch.save(model, model_save_path)
 
 import time
 start_time = time.time()
-
+print('hi')
 epochs = 8
-for epoch in range(epochs):
+for epoch in range(4,epochs):
   model.train()
   idx = 0
   for batch, labels, targets in train_dataloader:
@@ -54,7 +54,7 @@ for epoch in range(epochs):
       if (idx+1) % 256 == 0:
           optimizer.step(); optimizer.zero_grad()
           accuracy_256_examples = acc.compute()
-          print(f'Time: {int(time.time()-start_time)}\nAccuracy for 256_batch number {(idx+1)//100}: {accuracy_256_examples}')
+          print(f'Time: {int(time.time()-start_time)}\nAccuracy for 256_batch number {(idx+1)//256}: {accuracy_256_examples}')
           acc.reset()
           model_save_path = f'/home/ubuntu/new_github_folder/Giphy_Classification/model_checkpoint/Modelsave{epoch}-{idx}.pt'
           torch.save(model, model_save_path)
@@ -63,6 +63,7 @@ for epoch in range(epochs):
   for batch,_, targets in val_dataloader:
     try: 
       model.eval()
+      batch = batch.permute(0,4,1,2,3) #batch, channels, frames, h, w
       batch, targets = batch.to(device).float(), targets.to(device).long()
       
       outputs = model(batch)
