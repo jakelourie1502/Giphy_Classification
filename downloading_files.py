@@ -8,7 +8,6 @@ aws_access_key_id, aws_secret_access_key = vars(parser.parse_args()).values()
 
 BUCKET_NAME = 'giphy-classification-bucket'
 idx = 1
-aws_acces
 r3 = boto3.resource('s3',
     aws_access_key_id = aws_access_key_id,
     aws_secret_access_key = aws_secret_access_key,
@@ -23,7 +22,7 @@ print(len(file_list))
 print(file_list[0])
 
 for file_name in file_list:
-    r3.Bucket(BUCKET_NAME).download_file(file_list[0], f'/home/ubuntu/{file_name}')
+    r3.Bucket(BUCKET_NAME).download_file(file_name, f'/home/ubuntu/{file_name}')
 
 # import av
 # import torchvision
