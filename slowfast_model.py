@@ -132,10 +132,10 @@ class SlowNet(torch.nn.Module):
         self.data_layer_fast = torch.nn.Conv3d(in_channels=3, out_channels=3, kernel_size=1, stride=1) # stride can later be changed to 2 if needed
         self.conv1_fast = torch.nn.Conv3d(in_channels=3, out_channels=16, kernel_size=(5,7,7), stride=(1,2,2)) # is this stride right?
         self.max_pool_fast = torch.nn.MaxPool3d(kernel_size=(1,3,3), stride=(1,2,2))
-        self.res2_fast = _make_residual_layer(3, 2, 16)
-        self.res3_fast = _make_residual_layer(4, 2, 32)
-        self.res4_fast = _make_residual_layer(4, 2, 64)
-        self.res5_fast = _make_residual_layer(4, 2, 128)
+        self.res2_fast = self._make_residual_layer(3, 2, 16)
+        self.res3_fast = self._make_residual_layer(4, 2, 32)
+        self.res4_fast = self._make_residual_layer(4, 2, 64)
+        self.res5_fast = self._make_residual_layer(4, 2, 128)
         self.avg_pool_fast = torch.nn.AvgPool3d(kernel_size=(1,3,3), stride=(alpha,1,1))
 
 
